@@ -2,7 +2,7 @@
 
 A high-fidelity, real-time mission map for the **Artemis II** Orion spacecraft.
 
-![Artemis II Mission Tracker Preview](https://moon-map.andrewwestley.co.uk/)
+[Artemis II Mission Tracker Preview](https://moon-map.andrewwestley.co.uk/)
 
 ## 🚀 Key Features
 
