@@ -193,6 +193,49 @@ class MissionTracker {
         if (clockEl) clockEl.textContent = `T+ ${d}d ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
 
+    drawSatellites(project, centerX, centerY, scale, moonPos) {
+        const { ctx } = this;
+        const now = Date.now() / 1000;
+
+        // 1. GEO Belt (35,786 km altitude + 6,378 km Earth radius)
+        const geoRadius = (35786 + 6378) * scale;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'; // Much brighter
+        ctx.lineWidth = 1; ctx.setLineDash([2, 5]);
+        ctx.beginPath(); ctx.arc(centerX, centerY, geoRadius, 0, Math.PI*2); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = '8px Orbitron'; ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillText("GEOSYNCHRONOUS BELT", centerX + geoRadius + 10, centerY);
+
+        // 2. ISS (400 km altitude, include trajectory circle)
+        const issOrbitRadius = (400 + 6378) * scale;
+        ctx.strokeStyle = 'rgba(0, 242, 255, 0.4)'; // Brighter cyan
+        ctx.setLineDash([4, 12]);
+        ctx.beginPath(); ctx.arc(centerX, centerY, issOrbitRadius, 0, Math.PI*2); ctx.stroke();
+        
+        const issAngle = now * 0.5;
+        const issX = centerX + Math.cos(issAngle) * issOrbitRadius;
+        const issY = centerY + Math.sin(issAngle) * issOrbitRadius;
+        ctx.fillStyle = 'rgba(0, 242, 255, 1.0)';
+        ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(issX, issY, 2.5, 0, Math.PI*2); ctx.fill();
+
+        // 3. LRO (orbiting the Moon)
+        const moonIconP = project(moonPos);
+        const lroOrbitRadius = (50 + 1737) * scale * 4; 
+        
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; // Brighter white
+        ctx.setLineDash([3, 6]);
+        ctx.beginPath(); ctx.arc(moonIconP.x, moonIconP.y, lroOrbitRadius, 0, Math.PI*2); ctx.stroke();
+
+        const lroAngle = now * 0.2;
+        const lroX = moonIconP.x + Math.cos(lroAngle) * lroOrbitRadius;
+        const lroY = moonIconP.y + Math.sin(lroAngle) * lroOrbitRadius;
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)'; 
+        ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(lroX, lroY, 3, 0, Math.PI*2); ctx.fill();
+        ctx.font = '8px Orbitron'; ctx.fillText("LRO", lroX + 5, lroY);
+    }
+
     draw() {
         const { ctx, canvas } = this;
         if (!this.fixedBasis) return;
@@ -229,6 +272,9 @@ class MissionTracker {
             const xOffset = (p.x * this.fixedBasis.ux.x + p.y * this.fixedBasis.ux.y + p.z * this.fixedBasis.ux.z) * scale;
             return { x: centerX + xOffset, y: centerY - yOffset };
         };
+
+        // Draw Background Infrastructure (GEO / LRO)
+        this.drawSatellites(project, centerX, centerY, scale, moonPos);
 
         // --- RENDER LAYERS ---
 

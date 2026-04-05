@@ -134,6 +134,47 @@ body {
     z-index: 0;
 }
 
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 6px 0;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+}
+
+.legend-line {
+    width: 20px;
+    height: 3px;
+    margin-right: 12px;
+    border-radius: 2px;
+}
+
+.legend-line.dash {
+    background: transparent !important;
+    height: 0;
+}
+
+.legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 26px;
+    margin-left: 7px;
+}
+
+@media (max-width: 768px) {
+    #integratedLegend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 15px;
+        margin-top: 5px;
+    }
+    .legend-item { font-size: 0.55rem; margin: 0; }
+}
+
 hr { opacity: 0.1; }
 
 .text-moon { color: #d1d5db; }
