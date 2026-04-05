@@ -1,0 +1,139 @@
+:root {
+    --space-black: #02040a;
+    --cyan-primary: #00f2ff;
+    --cyan-glow: rgba(0, 242, 255, 0.4);
+    --moon-color: #f0f0f0;
+    --earth-color: #2b82d9;
+    --bg-glass: rgba(15, 23, 42, 0.7);
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--space-black);
+    color: white;
+    cursor: crosshair;
+}
+
+.font-orbitron {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.text-cyan { color: var(--cyan-primary); }
+.text-glow {
+    text-shadow: 0 0 10px var(--cyan-glow), 0 0 20px var(--cyan-glow);
+}
+
+.glass-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+.glass-card-sm {
+    background: var(--bg-glass);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+}
+
+.border-cyan-glow {
+    border: 1px solid var(--cyan-primary);
+    box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.blink {
+    animation: blink-animation 2s infinite;
+}
+
+@keyframes blink-animation {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Mobile Responsive Overrides */
+@media (max-width: 768px) {
+    .glass-card {
+        padding: 0.75rem !important;
+        border-radius: 8px;
+    }
+
+    .container-fluid {
+        padding: 0.5rem !important;
+    }
+
+    /* Move Stats to top center or bottom center? 
+       Actually, top right and left is okay if we shrink them.
+       But bottom-docked panel is better for one-handed use.
+    */
+    .position-absolute.top-0.end-0 {
+        top: auto !important;
+        bottom: 60px !important; /* Above status box */
+        left: 0 !important;
+        right: 0 !important;
+        padding: 5px !important;
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .position-absolute.top-0.end-0 .glass-card {
+        width: 95%;
+        max-width: 450px;
+        background: rgba(15, 23, 42, 0.4) !important; /* Higher transparency */
+        backdrop-filter: blur(4px) !important;
+    }
+
+    .row.g-2 {
+        --bs-gutter-y: 0.25rem !important;
+    }
+
+    hr {
+        margin: 0.5rem 0 !important;
+    }
+
+    .font-orbitron.text-glow {
+        font-size: 1.1rem !important;
+    }
+
+    .h5 {
+        font-size: 0.9rem !important;
+    }
+
+    .small {
+        font-size: 0.75rem !important;
+    }
+
+    .mobile-status-box {
+        padding: 5px !important;
+    }
+}
+
+#missionMap {
+    z-index: 0;
+}
+
+hr { opacity: 0.1; }
+
+.text-moon { color: #d1d5db; }
