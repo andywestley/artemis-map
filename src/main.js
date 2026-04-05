@@ -195,39 +195,42 @@ class MissionTracker {
 
     drawSatellites(project, centerX, centerY, scale, moonPos) {
         const { ctx } = this;
-        const now = Date.now() / 1000;
+        // Use mission seconds for orbital synchronization
+        const t = this.missionSeconds || 0; 
+        const speedUp = 50; // Visual compression to see orbits zip by
 
-        // 1. GEO Belt (35,786 km altitude + 6,378 km Earth radius)
+        // 1. GEO Belt (Static in the Earth-Mission Frame)
         const geoRadius = (35786 + 6378) * scale;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'; // Much brighter
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'; 
         ctx.lineWidth = 1; ctx.setLineDash([2, 5]);
         ctx.beginPath(); ctx.arc(centerX, centerY, geoRadius, 0, Math.PI*2); ctx.stroke();
         ctx.setLineDash([]);
         ctx.font = '8px Orbitron'; ctx.fillStyle = 'rgba(255,255,255,0.4)';
         ctx.fillText("GEOSYNCHRONOUS BELT", centerX + geoRadius + 10, centerY);
 
-        // 2. ISS (400 km altitude, include trajectory circle)
-        const issOrbitRadius = (400 + 6378) * scale;
-        ctx.strokeStyle = 'rgba(0, 242, 255, 0.4)'; // Brighter cyan
+        // 2. ISS (90 min period = 5400s)
+        const issOrbitRadius = 20; // Aesthetic clear-radius
+        const issAngle = (t * speedUp / 5400) * (Math.PI * 2);
+        
+        ctx.strokeStyle = 'rgba(0, 242, 255, 0.4)'; 
         ctx.setLineDash([4, 12]);
         ctx.beginPath(); ctx.arc(centerX, centerY, issOrbitRadius, 0, Math.PI*2); ctx.stroke();
         
-        const issAngle = now * 0.5;
         const issX = centerX + Math.cos(issAngle) * issOrbitRadius;
         const issY = centerY + Math.sin(issAngle) * issOrbitRadius;
         ctx.fillStyle = 'rgba(0, 242, 255, 1.0)';
         ctx.setLineDash([]);
-        ctx.beginPath(); ctx.arc(issX, issY, 2.5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(issX, issY, 3, 0, Math.PI*2); ctx.fill();
 
-        // 3. LRO (orbiting the Moon)
+        // 3. LRO (113 min period = 6780s)
         const moonIconP = project(moonPos);
         const lroOrbitRadius = (50 + 1737) * scale * 4; 
+        const lroAngle = (t * speedUp / 6780) * (Math.PI * 2);
         
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; // Brighter white
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; 
         ctx.setLineDash([3, 6]);
         ctx.beginPath(); ctx.arc(moonIconP.x, moonIconP.y, lroOrbitRadius, 0, Math.PI*2); ctx.stroke();
 
-        const lroAngle = now * 0.2;
         const lroX = moonIconP.x + Math.cos(lroAngle) * lroOrbitRadius;
         const lroY = moonIconP.y + Math.sin(lroAngle) * lroOrbitRadius;
         ctx.fillStyle = 'rgba(255, 255, 255, 1)'; 
