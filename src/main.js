@@ -12,6 +12,7 @@ class MissionTracker {
         this.stars = [];
         this.startTime = null;
         this.currentTime = new Date();
+        this.missionSeconds = 0;
         this.lastWallTime = performance.now();
         
         // Stabilized Basis Vectors
@@ -53,12 +54,27 @@ class MissionTracker {
             
             this.parseTrajectory(result);
             this.initTooltip();
+            this.initHUDToggle(); 
             this.animate();
         } catch (err) {
             console.error("Failed to load trajectory data:", err);
             document.getElementById('missionStatus').textContent = "ERROR: OFFLINE";
             document.getElementById('missionStatus').className = "text-danger";
         }
+    }
+
+
+    initHUDToggle() {
+        const btn = document.getElementById('hudToggle');
+        const hud = document.getElementById('missionHud');
+        const icon = document.getElementById('toggleIcon');
+        if (!btn || !hud || !icon) return;
+
+        btn.addEventListener('click', () => {
+            hud.classList.toggle('hud-expanded');
+            const isExpanded = hud.classList.contains('hud-expanded');
+            icon.textContent = isExpanded ? '✖️' : 'ℹ️';
+        });
     }
 
     initTooltip() {
@@ -189,6 +205,7 @@ class MissionTracker {
         
         const missionElapsed = this.startTime ? Math.floor((this.currentTime - this.startTime) / 1000) : 0;
         const d = Math.floor(missionElapsed / 86400), h = Math.floor((missionElapsed % 86400) / 3600), m = Math.floor((missionElapsed % 3600) / 60), s = Math.floor(missionElapsed % 60);
+        this.missionSeconds = missionElapsed;
         const clockEl = document.getElementById('missionClock');
         if (clockEl) clockEl.textContent = `T+ ${d}d ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }

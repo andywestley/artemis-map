@@ -130,6 +130,45 @@ body {
     }
 }
 
+.btn-toggle {
+    display: none;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2000;
+}
+
+#missionHud {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 768px) {
+    .btn-toggle {
+        display: flex;
+        position: fixed;
+        bottom: 85px;
+        right: 15px;
+    }
+
+    #missionHud {
+        transform: translateY(calc(100% + 20px)); /* Shifted off-screen */
+        background: transparent !important;
+    }
+
+    #missionHud.hud-expanded {
+        transform: translateY(0);
+    }
+}
+
 #missionMap {
     z-index: 0;
 }
@@ -173,6 +212,21 @@ body {
         margin-top: 5px;
     }
     .legend-item { font-size: 0.55rem; margin: 0; }
+    
+    #missionHud {
+        transform: translateY(calc(100% + 60px));
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        background: transparent !important;
+        pointer-events: none;
+        z-index: 1000;
+    }
+    #missionHud.hud-expanded {
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    #missionHud .glass-card {
+        pointer-events: auto;
+    }
 }
 
 hr { opacity: 0.1; }
