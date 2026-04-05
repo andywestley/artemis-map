@@ -130,7 +130,7 @@ body {
     }
 }
 
-.btn-toggle {
+.btn-toggle, .btn-motion {
     display: none;
     background: var(--bg-glass);
     backdrop-filter: blur(12px);
@@ -145,6 +145,26 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 2000;
+}
+
+.btn-motion {
+    display: flex;
+    position: fixed;
+    bottom: 25px;
+    left: 20px;
+    opacity: 0.6;
+}
+
+.btn-motion:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+    .btn-motion {
+        bottom: 85px;
+        left: 15px;
+    }
 }
 
 #missionHud {

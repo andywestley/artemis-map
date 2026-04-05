@@ -13,7 +13,7 @@
 <body class="bg-black text-white">
     <div id="app" class="position-relative vw-100 vh-100 overflow-hidden">
         <!-- Canvas Map -->
-        <canvas id="missionMap" class="position-absolute top-0 start-0 w-100 h-100"></canvas>
+        <canvas id="missionMap" role="img" aria-label="Real-time map showing Artemis II Orion trajectory toward the Moon with orbital infrastructure" class="position-absolute top-0 start-0 w-100 h-100"></canvas>
 
         <!-- HUD Overlay -->
         <div class="container-fluid position-absolute top-0 start-0 p-4 pe-none">
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Right Side Stats -->
-        <button id="hudToggle" class="pe-auto btn-toggle shadow-lg">
+        <button id="hudToggle" aria-label="Toggle Mission Statistics and Key" class="pe-auto btn-toggle shadow-lg">
             <span id="toggleIcon">ℹ️</span>
         </button>
         <div id="missionHud" class="position-absolute top-0 end-0 p-4 pe-none w-auto h-auto" style="min-width: 300px;">
@@ -64,6 +64,13 @@
                     <div class="legend-item"><span class="legend-dot" style="background: #fff; width: 6px; height: 6px; margin-left: 7px; margin-right: 26px;"></span> Satellites (LRO / ISS)</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Animation Toggle (Bottom Left) -->
+        <div class="position-absolute bottom-0 start-0 p-4">
+            <button id="motionToggle" aria-label="Toggle Animation" class="pe-auto btn-motion shadow-lg">
+                <span id="motionIcon">⏸️</span>
+            </button>
         </div>
 
         <!-- Bottom Controls/Info -->

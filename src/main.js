@@ -24,6 +24,11 @@ class MissionTracker {
         
         window.addEventListener('resize', () => this.resize());
         this.resize();
+        
+        // Accessibility: Motion Control
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this.animationActive = !motionQuery.matches;
+
         this.initStars();
         this.loadData();
     }
@@ -55,6 +60,7 @@ class MissionTracker {
             this.parseTrajectory(result);
             this.initTooltip();
             this.initHUDToggle(); 
+            this.initMotionToggle();
             this.animate();
         } catch (err) {
             console.error("Failed to load trajectory data:", err);
@@ -74,6 +80,22 @@ class MissionTracker {
             hud.classList.toggle('hud-expanded');
             const isExpanded = hud.classList.contains('hud-expanded');
             icon.textContent = isExpanded ? '✖️' : 'ℹ️';
+        });
+    }
+
+    initMotionToggle() {
+        const btn = document.getElementById('motionToggle');
+        const icon = document.getElementById('motionIcon');
+        if (!btn || !icon) return;
+
+        // Visual initial state
+        icon.textContent = this.animationActive ? '⏸️' : '▶️';
+        btn.style.opacity = this.animationActive ? '0.6' : '1.0';
+
+        btn.addEventListener('click', () => {
+            this.animationActive = !this.animationActive;
+            icon.textContent = this.animationActive ? '⏸️' : '▶️';
+            btn.style.opacity = this.animationActive ? '0.6' : '1.0';
         });
     }
 
@@ -180,7 +202,7 @@ class MissionTracker {
     animate() {
         const now = performance.now();
         if (!this.lastWallTime) this.lastWallTime = now;
-        const dt = now - this.lastWallTime;
+        const dt = this.animationActive ? (now - this.lastWallTime) : 0;
         this.currentTime = new Date(this.currentTime.getTime() + dt);
         this.lastWallTime = now;
 
@@ -306,7 +328,9 @@ class MissionTracker {
         ctx.font = '10px Orbitron'; ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fillText("EARTH", earthP.x - 20, earthP.y + 35);
 
         // 2. Moon Orbit/Trajectory (HIGH VISIBILITY)
-        this.moonDashOffset = (this.moonDashOffset || 0) + 0.3;
+        if (this.animationActive) {
+            this.moonDashOffset = (this.moonDashOffset || 0) + 0.3;
+        }
         ctx.strokeStyle = 'rgba(200, 200, 220, 0.6)'; // Silver-white
         ctx.lineWidth = 1.8;
         ctx.setLineDash([6, 12]);
@@ -321,7 +345,9 @@ class MissionTracker {
         ctx.lineDashOffset = 0;
 
         // 3. Orion Predicted Path (MARCHING ANTS)
-        this.dashOffset = (this.dashOffset || 0) + 0.5;
+        if (this.animationActive) {
+            this.dashOffset = (this.dashOffset || 0) + 0.5;
+        }
         ctx.strokeStyle = 'rgba(0, 242, 255, 0.6)'; ctx.setLineDash([8, 12]);
         ctx.lineDashOffset = -this.dashOffset; ctx.lineWidth = 1.8;
         ctx.beginPath();
